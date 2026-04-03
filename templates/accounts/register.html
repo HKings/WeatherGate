@@ -1,0 +1,137 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Register — WeatherGate{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center" style="background:#0f1b2d">
+    <div class="w-full max-w-md p-8 rounded-2xl" style="background:#1a2d42">
+
+        <div class="flex flex-col items-center gap-2 mb-8">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-white text-sm" style="background:#1e6fb5">WG</div>
+            <h1 class="text-white font-bold text-xl">WeatherGate</h1>
+            <p class="text-sm" style="color:#7aaed4">Create your account</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="px-4 py-3 rounded-lg mb-4 text-sm" style="background:#1e3a5f;color:#7aaed4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" id="registerForm">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1" style="color:#7aaed4">Username</label>
+                <input type="text" name="username" required
+                    class="w-full rounded-lg px-3 py-2 text-sm focus:outline-none"
+                    style="background:#0f1b2d;color:#e8f4fd;border:1px solid #2a4a6b">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1" style="color:#7aaed4">Email</label>
+                <input type="email" name="email" required
+                    class="w-full rounded-lg px-3 py-2 text-sm focus:outline-none"
+                    style="background:#0f1b2d;color:#e8f4fd;border:1px solid #2a4a6b">
+            </div>
+
+            <div class="mb-2">
+                <label class="block text-sm font-medium mb-1" style="color:#7aaed4">Password</label>
+                <div class="relative">
+                    <input type="password" name="password" id="password" required
+                        class="w-full rounded-lg px-3 py-2 text-sm focus:outline-none pr-10"
+                        style="background:#0f1b2d;color:#e8f4fd;border:1px solid #2a4a6b"
+                        oninput="validatePassword()">
+                    <button type="button" onclick="togglePassword('password', 'eye1')"
+                        class="absolute right-3 top-1/2 -translate-y-1/2"
+                        style="color:#7aaed4;background:none;border:none;cursor:pointer;padding:0">
+                        <svg id="eye1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-4 text-xs space-y-1" id="passwordRules">
+                <div id="rule-length" style="color:#4a6a8a;display:none">✗ At least 6 characters</div>
+                <div id="rule-number" style="color:#4a6a8a;display:none">✗ At least one number</div>
+                <div id="rule-special" style="color:#4a6a8a;display:none">✗ At least one special character</div>
+                <div id="rule-all-good" style="color:#4ade80;display:none">✓ Password looks good</div>
+            </div>
+
+            <div class="mb-2">
+                <label class="block text-sm font-medium mb-1" style="color:#7aaed4">Confirm password</label>
+                <div class="relative">
+                    <input type="password" name="password_confirm" id="passwordConfirm" required
+                        class="w-full rounded-lg px-3 py-2 text-sm focus:outline-none pr-10"
+                        style="background:#0f1b2d;color:#e8f4fd;border:1px solid #2a4a6b"
+                        oninput="validateConfirm()">
+                    <button type="button" onclick="togglePassword('passwordConfirm', 'eye2')"
+                        class="absolute right-3 top-1/2 -translate-y-1/2"
+                        style="color:#7aaed4;background:none;border:none;cursor:pointer;padding:0">
+                        <svg id="eye2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="confirmMsg" class="text-xs mb-4" style="color:#4a6a8a"></div>
+
+            <button type="submit"
+                class="w-full py-2 rounded-lg font-semibold text-white text-sm mt-2"
+                style="background:#1e6fb5">
+                Create account
+            </button>
+        </form>
+
+        <p class="text-center text-sm mt-4" style="color:#4a6a8a">
+            Already have an account?
+            <a href="{% url 'login' %}" style="color:#7aaed4">Sign in</a>
+        </p>
+
+    </div>
+</div>
+
+<script>
+function togglePassword(inputId, eyeId) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function validatePassword() {
+    const pw = document.getElementById('password').value;
+    const hasLength = pw.length >= 6;
+    const hasNumber = /\d/.test(pw);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pw);
+    const allGood = hasLength && hasNumber && hasSpecial;
+
+    document.getElementById('rule-length').style.display = (!hasLength && pw.length > 0) ? 'block' : 'none';
+    document.getElementById('rule-number').style.display = (!hasNumber && pw.length > 0) ? 'block' : 'none';
+    document.getElementById('rule-special').style.display = (!hasSpecial && pw.length > 0) ? 'block' : 'none';
+    document.getElementById('rule-all-good').style.display = allGood ? 'block' : 'none';
+
+    validateConfirm();
+}
+
+function validateConfirm() {
+    const pw = document.getElementById('password').value;
+    const confirm = document.getElementById('passwordConfirm').value;
+    const msg = document.getElementById('confirmMsg');
+
+    if (confirm.length === 0) { msg.textContent = ''; return; }
+
+    if (pw === confirm) {
+        msg.textContent = '✓ Passwords match';
+        msg.style.color = '#4ade80';
+    } else {
+        msg.textContent = '✗ Passwords do not match';
+        msg.style.color = '#f87171';
+    }
+}
+</script>
+{% endblock %}

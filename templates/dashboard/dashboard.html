@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Dashboard — WeatherGate{% endblock %}
+
+{% block content %}
+<div class="min-h-screen" style="background:#0f1b2d">
+
+    <!-- Navbar -->
+    <nav class="px-8 py-4 flex justify-between items-center" style="background:#1a2d42;border-bottom:1px solid #2a4a6b">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-xs" style="background:#1e6fb5">WG</div>
+            <span class="font-semibold text-white">WeatherGate</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-sm" style="color:#e8f4fd">{{ request.user.username }}</span>
+            <a href="{% url 'logout' %}"
+                class="text-sm px-4 py-1.5 rounded-lg font-medium transition-all"
+                style="color:#f87171;border:1px solid #f87171;background:transparent"
+                onmouseover="this.style.background='#3a1a1a'"
+                onmouseout="this.style.background='transparent'">
+                    Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="max-w-2xl mx-auto mt-20 px-4 text-center">
+        <div class="p-12 rounded-2xl" style="background:#1a2d42;border:1px solid #2a4a6b">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#0f1b2d">
+                <svg class="w-8 h-8" style="color:#ffffff" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                </svg>
+            </div>
+            <h2 class="text-white font-bold text-2xl mb-2">Welcome, {{ request.user.username }}.</h2>
+            <p class="text-sm" style="color:#4a6a8a">The dashboard is on its way.</p>
+        </div>
+    </main>
+
+</div>
+{% endblock %}

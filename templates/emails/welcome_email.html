@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background:#0f1b2d;font-family:Arial,sans-serif">
+    <div style="max-width:480px;margin:40px auto;background:#1a2d42;border-radius:16px;overflow:hidden">
+
+        <!-- Header -->
+        <div style="background:#1e6fb5;padding:32px;text-align:center">
+            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:12px;margin:0 auto 12px;display:inline-flex;align-items:center;justify-content:center">
+                <span style="color:white;font-weight:700;font-size:14px">WG</span>
+            </div>
+            <h1 style="color:white;font-size:20px;margin:0;font-weight:700">WeatherGate</h1>
+        </div>
+
+        <!-- Body -->
+        <div style="padding:40px 32px;text-align:center">
+            <div style="width:56px;height:56px;background:#0f1b2d;border-radius:50%;margin:0 auto 20px;display:inline-flex;align-items:center;justify-content:center">
+                <span style="font-size:24px">👋</span>
+            </div>
+            <h2 style="color:white;font-size:18px;font-weight:700;margin:0 0 8px">Welcome, {{ username }}!</h2>
+            <p style="color:#7aaed4;font-size:14px;margin:0 0 32px">Your account has been created successfully. You can now sign in and access your weather dashboard.</p>
+
+            <!-- Info box -->
+            <div style="background:#0f1b2d;border-radius:12px;padding:24px;margin:0 auto 32px;text-align:left">
+                <p style="color:#4a6a8a;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 16px">Account details</p>
+                <p style="color:#7aaed4;font-size:13px;margin:0 0 8px">
+                    <span style="color:#4a6a8a">Username</span><br>
+                    <strong style="color:#e8f4fd">{{ username }}</strong>
+                </p>
+                <p style="color:#7aaed4;font-size:13px;margin:0">
+                    <span style="color:#4a6a8a">Email</span><br>
+                    <strong style="color:#e8f4fd">{{ email }}</strong>
+                </p>
+            </div>
+
+            <div style="background:#1e3a5f;border-radius:8px;padding:16px;text-align:left">
+                <p style="color:#7aaed4;font-size:12px;margin:0">
+                    <strong style="color:#e8f4fd">Security tip:</strong> Every time you sign in, a verification code will be sent to your email. This keeps your account secure.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="padding:20px 32px;text-align:center;border-top:1px solid #2a4a6b">
+            <p style="color:#4a6a8a;font-size:11px;margin:0">WeatherGate — Secure Weather Dashboard</p>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -4,7 +4,7 @@ import random
 import string
 
 class CustomUser(AbstractUser):
-    # MFA token sent by rmail (6 digits)
+    # MFA token sent by email (6 digits)
     mfa_token = models.CharField(max_length=6, blank=True, null=True)
     
     # Token expiration timestamp
@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
 
     def generate_mfa_token(self):
         # Generates a random 6-digit numeric token
-        self.mfa_token = ''.join(random.choice(string.digits, k=6))
+        self.mfa_token = ''.join(random.choices(string.digits, k=6))
         return self.mfa_token
     
     def __str__(self):
