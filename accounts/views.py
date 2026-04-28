@@ -10,9 +10,8 @@ from django.template.loader import render_to_string
 def register_view(request):
     """
     Handles new user registration.
-    Receives username, email and password from the form.
-    Checks if the email or username already exists before creating the account.
-    On success, redirects to the login page.
+    Creates the account as inactive, sends confirmation token by email.
+    Account is only activated after email confirmation.
     """
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -28,32 +27,77 @@ def register_view(request):
         if CustomUser.objects.filter(username=username).exists():
             messages.error(request, 'Username already taken.')
             return redirect('register')
-        
-        # Create the new user with hashed password
+
+        # Create the user as inactive until email is confirmed
         user = CustomUser.objects.create_user(
             username=username,
             email=email,
-            password=password
+            password=password,
+            is_active=False
         )
 
-        # Send welcome email
-        html_message = render_to_string('emails/welcome_email.html', {
-            'username': username,
-            'email': email,
-        })
+        # Generate confirmation token and save
+        token = user.generate_mfa_token()
+        user.save()
+
+        # Store user ID in session for confirmation step
+        request.session['register_user_id'] = user.id
+
+        # Send confirmation email
+        html_message = render_to_string('emails/email_verify.html', {'token': token})
         send_mail(
-            subject='Welcome to WeatherGate!',
-            message=f'Welcome to WeatherGate, {username}!',
+            subject='WeatherGate — Confirm your email',
+            message=f'Your confirmation code is: {token}',
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email],
             html_message=html_message,
         )
 
-        messages.success(request, 'Account created successfully. Please login!')
-        return redirect('login')
-    
-    # If GET request, just render the registration form
+        return redirect('email_verify')
+
     return render(request, 'accounts/register.html')
+
+
+def email_verify_view(request):
+    """
+    Handles email confirmation after registration.
+    Validates the token and activates the account.
+    On success, redirects to login with success message.
+    """
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        user_id = request.session.get('register_user_id')
+
+        if not user_id:
+            return redirect('register')
+
+        try:
+            user = CustomUser.objects.get(id=user_id)
+
+            if not user.is_mfa_token_valid():
+                messages.error(request, 'Verification code has expired. Please login again.')
+                return redirect('login')
+
+            if user.mfa_token == token:
+                # Token valid — activate account and mark email as verified
+                user.is_active = True
+                user.is_email_verified = True
+                user.mfa_token = None
+                user.save()
+
+                # Clear session
+                del request.session['register_user_id']
+
+                messages.success(request, 'Account created successfully. Please login!')
+                return redirect('login')
+            else:
+                messages.error(request, 'Invalid confirmation code.')
+                return redirect('email_verify')
+
+        except CustomUser.DoesNotExist:
+            return redirect('register')
+
+    return render(request, 'accounts/mfa_verify.html')
     
 def login_view(request):
     """
@@ -115,6 +159,10 @@ def mfa_verify_view(request):
         
         try:
             user = CustomUser.objects.get(id=user_id)
+
+            if not user.is_mfa_token_valid():
+                messages.error(request, 'Verification code has expired. Please login again.')
+                return redirect('login')
 
             if user.mfa_token == token:
                 # Token matches, mark MFA as verified and log the user in
