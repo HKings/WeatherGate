@@ -104,3 +104,6 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# OpenWeatherMap API
+OPENWEATHER_API_KEY = env('OPENWEATHER_API_KEY')

@@ -13,27 +13,55 @@
         </div>
         <div class="flex items-center gap-4">
             <span class="text-sm" style="color:#e8f4fd">{{ request.user.username }}</span>
-            <a href="{% url 'logout' %}"
-                class="text-sm px-4 py-1.5 rounded-lg font-medium transition-all"
-                style="color:#f87171;border:1px solid #f87171;background:transparent"
-                onmouseover="this.style.background='#3a1a1a'"
-                onmouseout="this.style.background='transparent'">
-                    Logout
-            </a>
+            <a href="{% url 'logout' %}" class="text-sm px-4 py-1.5 rounded-lg font-medium transition-all"
+               style="color:#f87171;border:1px solid #f87171;background:transparent"
+               onmouseover="this.style.background='#3a1a1a'"
+               onmouseout="this.style.background='transparent'">Logout</a>
         </div>
     </nav>
 
-    <!-- Main content -->
-    <main class="max-w-2xl mx-auto mt-20 px-4 text-center">
-        <div class="p-12 rounded-2xl" style="background:#1a2d42;border:1px solid #2a4a6b">
-            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#0f1b2d">
-                <svg class="w-8 h-8" style="color:#ffffff" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-                </svg>
+    <!-- Search bar -->
+    <div class="max-w-2xl mx-auto mt-10 px-4">
+        <form method="GET" class="flex gap-2">
+            <input type="text" name="city" value="{{ city }}" placeholder="Search city..."
+                class="flex-1 rounded-lg px-4 py-2 text-sm focus:outline-none"
+                style="background:#1a2d42;color:#e8f4fd;border:1px solid #2a4a6b">
+            <button type="submit" class="px-6 py-2 rounded-lg text-sm font-medium text-white"
+                style="background:#1e6fb5">Search</button>
+        </form>
+    </div>
+
+    <!-- Weather card -->
+    <main class="max-w-2xl mx-auto mt-6 px-4">
+        {% if weather %}
+        <div class="p-8 rounded-2xl" style="background:#1a2d42;border:1px solid #2a4a6b">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-white font-bold text-3xl">{{ weather.city }}, {{ weather.country }}</h2>
+                    <p class="text-sm mt-1" style="color:#7aaed4">{{ weather.description }}</p>
+                </div>
+                <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="weather icon" class="w-16 h-16">
             </div>
-            <h2 class="text-white font-bold text-2xl mb-2">Welcome, {{ request.user.username }}.</h2>
-            <p class="text-sm" style="color:#4a6a8a">The dashboard is on its way.</p>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl text-center" style="background:#0f1b2d">
+                    <p class="text-3xl font-bold text-white">{{ weather.temperature }}°C</p>
+                    <p class="text-xs mt-1" style="color:#4a6a8a">Temperature</p>
+                </div>
+                <div class="p-4 rounded-xl text-center" style="background:#0f1b2d">
+                    <p class="text-3xl font-bold text-white">{{ weather.feels_like }}°C</p>
+                    <p class="text-xs mt-1" style="color:#4a6a8a">Feels like</p>
+                </div>
+                <div class="p-4 rounded-xl text-center" style="background:#0f1b2d">
+                    <p class="text-3xl font-bold text-white">{{ weather.humidity }}%</p>
+                    <p class="text-xs mt-1" style="color:#4a6a8a">Humidity</p>
+                </div>
+            </div>
         </div>
+        {% else %}
+        <div class="p-8 rounded-2xl text-center" style="background:#1a2d42;border:1px solid #2a4a6b">
+            <p style="color:#4a6a8a">City not found. Please try another search.</p>
+        </div>
+        {% endif %}
     </main>
 
 </div>
