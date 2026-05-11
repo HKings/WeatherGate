@@ -44,6 +44,7 @@ pip install -r requirements.txt
 
 ## Create a `.env` file with your credentials:
 
+```bash
 SECRET_KEY=your-secret-key
 DEBUG=True
 DB_NAME=your-db-name
@@ -57,6 +58,7 @@ EMAIL_USE_TLS=True
 EMAIL_HOST_USER=your-email
 EMAIL_HOST_PASSWORD=your-email-password
 OPENWEATHER_API_KEY=your-api-key
+```
 
 ## Then run:
 
