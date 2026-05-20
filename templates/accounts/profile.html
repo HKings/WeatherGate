@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 
-{% block title %}Dashboard — WeatherGate{% endblock %}
+{% block title %}Profile — WeatherGate{% endblock %}
 
 {% block content %}
 <div class="flex min-h-screen" style="background:#0f1b2d">
@@ -12,7 +12,7 @@
             <span class="font-semibold text-white">WeatherGate</span>
         </div>
         <nav class="flex flex-col gap-1">
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" style="background:#1e6fb5;color:white">
+            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm" style="color:#7aaed4">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
                 </svg>
@@ -39,7 +39,7 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col">
 
-        <!-- Top navbar -->
+        <!-- Navbar -->
         <nav class="flex items-center justify-end px-8 py-4" style="border-bottom:1px solid #2a4a6b">
             <div class="relative" id="avatarMenu">
                 <button onclick="toggleMenu()" class="flex items-center gap-2 focus:outline-none">
@@ -62,45 +62,43 @@
             </div>
         </nav>
 
-        <!-- Search bar -->
+        <!-- Profile content -->
         <main class="flex-1 p-8">
-            <form method="GET" class="flex gap-2 mb-6 max-w-lg">
-                <input type="text" name="city" value="{{ city }}" placeholder="Search city..."
-                    class="flex-1 rounded-lg px-4 py-2 text-sm focus:outline-none"
-                    style="background:#1a2d42;color:#e8f4fd;border:1px solid #2a4a6b">
-                <button type="submit" class="px-6 py-2 rounded-lg text-sm font-medium text-white"
-                    style="background:#1e6fb5">Search</button>
-            </form>
+            <div class="max-w-lg">
+                <h2 class="text-white font-bold text-xl mb-6">Profile</h2>
 
-            {% if weather %}
-            <div class="max-w-lg p-8 rounded-2xl" style="background:#1a2d42;border:1px solid #2a4a6b">
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 class="text-white font-bold text-3xl">{{ weather.city }}, {{ weather.country }}</h2>
-                        <p class="text-sm mt-1" style="color:#7aaed4">{{ weather.description }}</p>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="px-4 py-3 rounded-lg mb-4 text-sm" style="background:#1e3a5f;color:#7aaed4">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Avatar -->
+                    <div class="flex items-center gap-6 mb-8 p-6 rounded-2xl" style="background:#1a2d42;border:1px solid #2a4a6b">
+                        {% if request.user.avatar %}
+                            <img src="{{ request.user.avatar.url }}" class="w-20 h-20 rounded-full object-cover">
+                        {% else %}
+                            <div class="w-20 h-20 rounded-full flex items-center justify-center text-white text-2xl font-bold" style="background:#1e6fb5">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <p class="text-white text-sm font-medium mb-1">{{ request.user.username }}</p>
+                            <p class="text-xs mb-3" style="color:#4a6a8a">{{ request.user.email }}</p>
+                            <label class="cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium text-white" style="background:#1e6fb5">
+                                Upload photo
+                                <input type="file" name="avatar" accept="image/*" class="hidden" onchange="this.form.submit()">
+                            </label>
+                        </div>
                     </div>
-                    <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="weather icon" class="w-16 h-16">
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="p-4 rounded-xl text-center" style="background:#0f1b2d">
-                        <p class="text-3xl font-bold text-white">{{ weather.temperature }}°C</p>
-                        <p class="text-xs mt-1" style="color:#4a6a8a">Temperature</p>
-                    </div>
-                    <div class="p-4 rounded-xl text-center" style="background:#0f1b2d">
-                        <p class="text-3xl font-bold text-white">{{ weather.feels_like }}°C</p>
-                        <p class="text-xs mt-1" style="color:#4a6a8a">Feels like</p>
-                    </div>
-                    <div class="p-4 rounded-xl text-center" style="background:#0f1b2d">
-                        <p class="text-3xl font-bold text-white">{{ weather.humidity }}%</p>
-                        <p class="text-xs mt-1" style="color:#4a6a8a">Humidity</p>
-                    </div>
-                </div>
+
+                </form>
             </div>
-            {% else %}
-            <div class="max-w-lg p-8 rounded-2xl text-center" style="background:#1a2d42;border:1px solid #2a4a6b">
-                <p style="color:#4a6a8a">City not found. Please try another search.</p>
-            </div>
-            {% endif %}
         </main>
 
         <!-- Footer -->
@@ -122,5 +120,4 @@ document.addEventListener('click', function(e) {
     }
 });
 </script>
-
 {% endblock %}

@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     mfa_token_created_at = models.DateTimeField(blank=True, null=True) # Token expiration timestamp
     mfa_verified = models.BooleanField(default=False) # Whether MFA has been verified in current session
     is_email_verified = models.BooleanField(default=False) # Whether email has been confirmed after registration
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True) # Profile avatar
 
     def generate_mfa_token(self):
         # Generates a random 6-digit numeric token and saves the creation time

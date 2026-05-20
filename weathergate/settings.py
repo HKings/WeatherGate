@@ -107,3 +107,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # OpenWeatherMap API
 OPENWEATHER_API_KEY = env('OPENWEATHER_API_KEY')
+
+# Media files (user uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

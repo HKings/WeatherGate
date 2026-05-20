@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import CustomUser
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 
 def register_view(request):
@@ -188,3 +189,19 @@ def logout_view(request):
     """
     logout(request)
     return redirect('login')
+
+@login_required
+def profile_view(request):
+    """
+    Handles user profile page.
+    Allows the user to upload a profile avatar.
+    """
+    if request.method == 'POST' and request.FILES.get('avatar'):
+        # Save the uploaded avatar
+        request.user.avatar = request.FILES['avatar']
+        request.user.save()
+        messages.success(request, 'Profile photo updated successfully.')
+        return redirect('profile')
+
+    return render(request, 'accounts/profile.html')
+
