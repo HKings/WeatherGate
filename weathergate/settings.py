@@ -12,7 +12,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Security
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware', # Enables HTTP security protections (HTTPS, security headers)
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serves static files in production
     'django.contrib.sessions.middleware.SessionMiddleware', # Manages user sessions (keeps the user "logged in" between pages)
     'django.middleware.common.CommonMiddleware', # Normalizes URLs (e.g. adds trailing "/") and manages basic HTTP headers
     'django.middleware.csrf.CsrfViewMiddleware', # Protects forms against CSRF attacks (Cross-Site Request Forgery). Ensures forms only accept requests from the site itself
@@ -85,6 +86,7 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
