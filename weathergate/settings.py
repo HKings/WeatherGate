@@ -13,6 +13,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://weathergate-production.up.railway.app']
 
 # Application definition
 INSTALLED_APPS = [
