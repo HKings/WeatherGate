@@ -1,0 +1,395 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherGate — The sky, in your hands</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #0f1b2d;
+            --blue: #1e6fb5;
+            --blue-light: #3b8fd4;
+            --gold: #c9943a;
+            --gold-light: #e8b86d;
+            --white: #f0ece4;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--navy);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 3rem;
+            background: linear-gradient(to bottom, rgba(15,27,45,0.9), transparent);
+            backdrop-filter: blur(4px);
+        }
+
+        .navbar-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .navbar-logo span { color: var(--gold-light); font-style: italic; }
+
+        .navbar-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+        .nav-btn-ghost {
+            background: transparent;
+            color: rgba(240,236,228,0.8);
+            padding: 0.5rem 1.25rem;
+            border: 1px solid rgba(240,236,228,0.25);
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.06em;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .nav-btn-ghost:hover { border-color: var(--gold-light); color: var(--gold-light); }
+
+        .nav-btn-solid {
+            background: var(--blue);
+            color: var(--white);
+            padding: 0.5rem 1.25rem;
+            border: 1px solid var(--blue);
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .nav-btn-solid:hover { background: var(--blue-light); border-color: var(--blue-light); }
+
+        /* HERO */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("{% static 'images/hero-bg.jpg' %}");
+            background-size: cover;
+            background-position: center 30%;
+            filter: brightness(0.45) saturate(1.2);
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(15,27,45,0.3) 0%,
+                rgba(15,27,45,0.0) 40%,
+                rgba(15,27,45,0.8) 85%,
+                rgba(15,27,45,1) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+            animation: fadeUp 1.2s ease forwards;
+            opacity: 0;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span { color: var(--gold-light); font-style: italic; }
+
+        .hero p {
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: rgba(240,236,228,0.75);
+            max-width: 520px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        .btn-primary {
+            background: var(--blue);
+            color: var(--white);
+            padding: 0.9rem 2.5rem;
+            border: none;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            padding: 0.9rem 2.5rem;
+            border: 1px solid rgba(240,236,228,0.3);
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover { border-color: var(--gold-light); color: var(--gold-light); transform: translateY(-2px); }
+
+        /* DIVIDER */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 3rem 0;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201,148,58,0.3), transparent);
+        }
+
+        .section-divider-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(201,148,58,0.5);
+        }
+
+        /* ABOUT */
+        .about {
+            padding: 2rem 2rem 8rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-text .section-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .about-text h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+
+        .about-text h2 em { color: var(--gold-light); font-style: italic; }
+
+        .about-text p {
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: rgba(240,236,228,0.65);
+            margin-bottom: 1.2rem;
+        }
+
+        .about-text p strong { color: var(--white); font-weight: 500; }
+
+        .contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 2.5rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(240,236,228,0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .contact-link:hover { color: var(--gold-light); }
+
+        .contact-link svg { width: 18px; height: 18px; opacity: 0.7; flex-shrink: 0; }
+
+        /* PHOTO */
+        .about-photo {
+            display: flex;
+            justify-content: center;
+        }
+
+        .photo-frame {
+            width: 260px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(201,148,58,0.2);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+            filter: grayscale(15%) contrast(1.05);
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid rgba(240,236,228,0.08);
+            padding: 2rem;
+            text-align: center;
+            color: rgba(240,236,228,0.25);
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        footer a { color: rgba(240,236,228,0.4); text-decoration: none; transition: color 0.2s; }
+        footer a:hover { color: var(--gold-light); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 1.5rem; }
+            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .about-photo { order: -1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a href="/" class="navbar-logo">Weather<span>Gate</span></a>
+    <div class="navbar-actions">
+        <a href="{% url 'login' %}" class="nav-btn-ghost">Login</a>
+        <a href="{% url 'register' %}" class="nav-btn-solid">Register</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>Weather<span>Gate</span></h1>
+        <p>Your city's weather, in real time, in the palm of your hand.</p>
+        <div class="hero-buttons">
+            <a href="{% url 'login' %}" class="btn-primary">Access Dashboard</a>
+            <a href="#about" class="btn-secondary">About the project</a>
+        </div>
+    </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider">
+    <div class="section-divider-dot"></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+    <div class="about-grid">
+        <div class="about-text">
+            <h2><em>About the project & the builder</em></h2>
+
+            <p>WeatherGate is a full-stack web application built with <strong>Django, PostgreSQL, and Python</strong>. It integrates the OpenWeatherMap API to deliver real-time weather data through a clean, dark-themed dashboard.</p>
+
+            <p>The project covers the full backend lifecycle. Custom user authentication with <strong>MFA via email</strong>, environment variable management, database migrations, pytest unit tests, and production deployment on Railway.</p>
+
+            <p>It was built publicly, documented on LinkedIn under <strong>#HKingsJourney</strong>, as proof that consistent work.</p>
+
+            <p>My name is <strong>Hamilton P C Reis</strong>. I'm a Python backend developer and the author of WeatherGate. The idea came from a simple desire: to apply what I was learning in practice, thinking ahead about the full picture. API integration, MFA authentication, production deployment.</p>
+
+            <div class="contacts">
+                <a href="https://www.linkedin.com/in/hamiltonpcreis" target="_blank" class="contact-link">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    linkedin.com/in/hamiltonpcreis
+                </a>
+                <a href="mailto:hamiltonpcreis.eng@gmail.com" class="contact-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    hamiltonpcreis.eng@gmail.com
+                </a>
+                <a href="https://github.com/HKings" target="_blank" class="contact-link">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    github.com/HKings
+                </a>
+            </div>
+        </div>
+
+        <div class="about-photo">
+            <div class="photo-frame">
+                <img src="https://avatars.githubusercontent.com/u/166912293?v=4" alt="Hamilton P C Reis">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 WeatherGate &nbsp;·&nbsp; Built by <a href="https://www.linkedin.com/in/hamiltonpcreis" target="_blank">Hamilton P C Reis</a> &nbsp;·&nbsp; The sky, in your hands</p>
+</footer>
+
+</body>
+</html>
