@@ -34,7 +34,7 @@ def register_view(request):
             username=username,
             email=email,
             password=password,
-            is_active=False
+            is_active=True
         )
 
         # Generate confirmation token and save
@@ -45,16 +45,18 @@ def register_view(request):
         request.session['register_user_id'] = user.id
 
         # Send confirmation email
-        html_message = render_to_string('emails/email_verify.html', {'token': token})
-        send_mail(
-            subject='WeatherGate — Confirm your email',
-            message=f'Your confirmation code is: {token}',
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            html_message=html_message,
-        )
+        ## html_message = render_to_string('emails/email_verify.html', {'token': token})
+         ## send_mail(
+             ## subject='WeatherGate — Confirm your email',
+             ## message=f'Your confirmation code is: {token}',
+            ## from_email=settings.EMAIL_HOST_USER,
+            ## recipient_list=[email],
+            ## html_message=html_message,
+        ## )
 
-        return redirect('email_verify')
+        ##return redirect('email_verify')
+
+        return redirect('login')
 
     return render(request, 'accounts/register.html')
 
