@@ -118,22 +118,27 @@ def login_view(request):
 
             if user is not None:
                 # Generate a new 6-digit MFA token and save it to the database
-                token = user.generate_mfa_token()
-                user.save()
+                # token = user.generate_mfa_token()
+                # user.save()
 
                 # Temporarily store the user ID in the session for the MFA step
-                request.session['mfa_user_id'] = user.id 
+                # request.session['mfa_user_id'] = user.id 
 
                 # Send the token to the user's email
-                html_message = render_to_string('emails/mfa_email.html', {'token': token})
-                send_mail(
-                    subject='WeatherGate - Your verification code',
-                    message=f'Your verification code is: {token}',
-                    from_email=settings.EMAIL_HOST_USER,
-                    recipient_list=[email],
-                    html_message=html_message,
-                )
-                return redirect('mfa_verify')
+                # html_message = render_to_string('emails/mfa_email.html', {'token': token})
+                # send_mail(
+                    # subject='WeatherGate - Your verification code',
+                    # message=f'Your verification code is: {token}',
+                    # from_email=settings.EMAIL_HOST_USER,
+                    # recipient_list=[email],
+                    # html_message=html_message,
+                # )
+                # return redirect('mfa_verify')
+
+                # MFA disabled for production - login directly
+                login(request, user)
+                return redirect('dashboard')
+
             else:
                 messages.error(request, 'Invalid email or password.')
                 return redirect('login')
