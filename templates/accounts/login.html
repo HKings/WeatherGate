@@ -229,10 +229,21 @@
 
     .login-footer-text a:hover { color: var(--gold-light); }
 
-    footer {
-    position: relative;
-    z-index: 10;
+    .page-footer {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 1.5rem;
+        color: rgba(240, 236, 228, 0.35);
+        font-size: 0.8rem;
     }
+
+    .page-footer a {
+        color: rgba(122, 174, 212, 0.8);
+        text-decoration: none;
+    }
+
+    .page-footer a:hover { color: var(--gold-light); }
 </style>
 
 <div class="login-page">
@@ -287,6 +298,11 @@
             </p>
         </div>
     </div>
+
+    <footer class="page-footer">
+        <p>© 2026 WeatherGate &nbsp;·&nbsp; Built by <a href="https://www.linkedin.com/in/hamiltonpcreis" target="_blank">Hamilton P C Reis</a> &nbsp;·&nbsp; The sky, in your hands.</p>
+    </footer>
+
 </div>
 
 <script>
